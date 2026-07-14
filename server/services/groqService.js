@@ -222,6 +222,115 @@ Tips
 
 }
 
+// ===================================
+// AI Coding Assessment
+// ===================================
+
+async function generateCodingQuestion(language, topic, difficulty) {
+
+  return askGroq(`
+
+You are a Senior Software Engineer at Google.
+
+Generate ONE coding interview question.
+
+Language:
+${language}
+
+Topic:
+${topic}
+
+Difficulty:
+${difficulty}
+
+Return in this format only.
+
+Title:
+
+Problem Statement:
+
+Constraints:
+
+Sample Input:
+
+Sample Output:
+
+Explanation:
+
+Starter Code:
+
+The starter code MUST be in ${language}.
+
+Do NOT provide the solution.
+
+`);
+
+}
+
+async function evaluateCode(question, code) {
+
+  return askGroq(`
+
+You are a Senior Software Engineer and coding interviewer.
+
+Problem:
+
+${question}
+
+Candidate Solution:
+
+${code}
+
+Evaluate the candidate's solution exactly like LeetCode.
+
+Generate suitable public and hidden test cases based on the problem statement and determine whether the solution passes or fails them.
+
+Return ONLY in the following format.
+
+Overall Score: X/10
+
+Verdict:
+Accepted / Partially Correct / Wrong Answer
+
+Test Cases
+
+✅ Passed
+1.
+2.
+3.
+
+❌ Failed
+1.
+2.
+
+Time Complexity:
+O(...)
+
+Space Complexity:
+O(...)
+
+Code Quality:
+/10
+
+Correctness:
+/10
+
+Explanation:
+...
+
+Optimized Solution:
+
+\`\`\`
+...
+\`\`\`
+
+Do not return markdown headings.
+Do not return any extra explanation outside this format.
+
+`);
+
+}
+
 module.exports = {
   analyzeResume,
   resumeScore,
@@ -231,4 +340,6 @@ module.exports = {
   careerChat,
   generateInterviewQuestion,
   evaluateAnswer,
+  generateCodingQuestion,
+  evaluateCode,
 };

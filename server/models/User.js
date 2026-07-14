@@ -22,7 +22,22 @@ const userSchema = new mongoose.Schema(
         type:String,
         enum:["student","recruiter"],
         default:"student"
+    },
+
+    // ==========================
+    // Password Reset OTP
+    // ==========================
+
+    resetOTP:{
+        type:String,
+        default:null
+    },
+
+    resetOTPExpire:{
+        type:Date,
+        default:null
     }
+
 },
 {
     timestamps:true

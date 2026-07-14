@@ -13,6 +13,8 @@ const {
   chatbot,
   generateInterview,
   evaluateInterview,
+  generateCoding,
+  evaluateCoding,
 } = require("../controllers/aiController");
 
 // =====================================
@@ -93,6 +95,24 @@ router.post(
 "/evaluate-interview",
 protect,
 evaluateInterview
+);
+
+// =====================================
+// AI Coding Assessment
+// =====================================
+
+// Generate Coding Question
+router.post(
+  "/coding/generate",
+  protect,
+  generateCoding
+);
+
+// Evaluate Coding Solution
+router.post(
+  "/coding/evaluate",
+  protect,
+  evaluateCoding
 );
 
 module.exports = router;

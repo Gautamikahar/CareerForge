@@ -12,6 +12,8 @@ const {
   careerChat,
   generateInterviewQuestion,
   evaluateAnswer,
+  generateCodingQuestion,
+  evaluateCode,
 } = require("../services/groqService");
 
 // ==============================
@@ -283,5 +285,99 @@ message:err.message
 });
 
 }
+
+};
+
+// ===================================
+// AI Coding Assessment
+// ===================================
+
+exports.generateCoding = async (req, res) => {
+
+  try {
+
+    const {
+
+      language,
+      topic,
+      difficulty,
+
+    } = req.body;
+
+    const result = await generateCodingQuestion(
+
+      language,
+      topic,
+      difficulty
+
+    );
+
+    res.json({
+
+      success: true,
+
+      result,
+
+    });
+
+  }
+
+  catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+
+      success: false,
+
+      message: err.message,
+
+    });
+
+  }
+
+};
+
+exports.evaluateCoding = async (req, res) => {
+
+  try {
+
+    const {
+
+      question,
+      code,
+
+    } = req.body;
+
+    const result = await evaluateCode(
+
+      question,
+      code
+
+    );
+
+    res.json({
+
+      success: true,
+
+      result,
+
+    });
+
+  }
+
+  catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+
+      success: false,
+
+      message: err.message,
+
+    });
+
+  }
 
 };
