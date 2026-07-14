@@ -1,7 +1,7 @@
 import { useEffect, useRef , useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import API from "../api/axios";
-import CareerChatbot from "../components/CareerChatbot";
+// import CareerChatbot from "../components/CareerChatbot";
 function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -377,53 +377,36 @@ const deleteResume = async () => {
 </div>
                 {/* AI Career Tools */}
 
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        {/* AI Hub */}
 
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl shadow-xl p-6">
+<div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-xl shadow-xl p-8 mb-8">
 
-            <h2 className="text-2xl font-bold mb-3">
-              🤖 AI Resume Analyzer
-            </h2>
+  <div className="flex flex-col md:flex-row justify-between items-center">
 
-            <p className="mb-6 opacity-90">
-              Analyze your resume with AI and receive ATS score,
-              strengths, weaknesses and personalized suggestions.
-            </p>
+    <div>
 
-            <Link to="/resume-analyzer">
+      <h2 className="text-3xl font-bold mb-3">
+        🤖 CareerForge AI Hub
+      </h2>
 
-              <button className="bg-white text-indigo-700 px-6 py-3 rounded-lg font-bold hover:scale-105 transition">
+      <p className="text-lg opacity-90 max-w-2xl">
+        Access all AI-powered career tools including Resume Analysis,
+        Interview Coach, Coding Assessment, Skill Gap Analysis,
+        Job Recommendations and Career Chatbot.
+      </p>
 
-                Analyze Resume
+    </div>
 
-              </button>
+    <button
+      onClick={() => navigate("/ai")}
+      className="mt-6 md:mt-0 bg-white text-indigo-700 px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 transition duration-300 shadow-lg"
+    >
+      🚀 Explore AI Hub
+    </button>
 
-            </Link>
+  </div>
 
-          </div>
-
-          <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl shadow-xl p-6">
-
-            <h2 className="text-2xl font-bold mb-3">
-              💬 AI Interview Coach
-            </h2>
-
-            <p className="mb-6 opacity-90">
-              Practice technical and HR interviews using AI.
-            </p>
-
-            <button
-  onClick={() =>
-    navigate("/interview-coach")
-  }
-  className="bg-white text-green-700 px-6 py-3 rounded-lg font-bold hover:bg-gray-100"
->
-  Start Interview
-</button>
-
-          </div>
-
-        </div>
+</div>
                 {/* Applied Jobs */}
 
         <div className="bg-white rounded-xl shadow-lg p-6">
@@ -472,7 +455,7 @@ const deleteResume = async () => {
         </div>
 
       </div>
-      <CareerChatbot />
+      {/* <CareerChatbot /> */}
 
     </div>
   );

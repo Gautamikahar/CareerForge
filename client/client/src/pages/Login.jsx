@@ -53,6 +53,7 @@ function Login() {
   };
 
   return (
+
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
 
       <form
@@ -69,44 +70,58 @@ function Login() {
           placeholder="Enter Email"
           className="w-full border p-3 mb-4 rounded"
           value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
+          onChange={(e)=>setEmail(e.target.value)}
           required
         />
 
         <input
           type="password"
           placeholder="Enter Password"
-          className="w-full border p-3 mb-4 rounded"
+          className="w-full border p-3 mb-2 rounded"
           value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
+          onChange={(e)=>setPassword(e.target.value)}
           required
         />
 
+        {/* Forgot Password */}
+
+        <div className="text-right mb-5">
+
+          <span
+            onClick={() => navigate("/forgot-password")}
+            className="text-blue-600 cursor-pointer text-sm hover:underline"
+          >
+            Forgot Password?
+          </span>
+
+        </div>
+
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-3 rounded"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded"
         >
           Login
         </button>
+
         <p className="text-center mt-5">
-  Don't have an account?{" "}
-  <span
-    onClick={() => navigate("/register")}
-    className="text-blue-600 cursor-pointer font-semibold"
-  >
-    Register
-  </span>
-</p>
+
+          Don't have an account?{" "}
+
+          <span
+            onClick={() => navigate("/register")}
+            className="text-blue-600 cursor-pointer font-semibold"
+          >
+            Register
+          </span>
+
+        </p>
+
       </form>
-      
 
     </div>
-    
+
   );
+
 }
 
 export default Login;

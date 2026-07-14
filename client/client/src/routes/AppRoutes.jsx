@@ -13,6 +13,11 @@ import PostJob from "../pages/PostJob";
 import EditJob from "../pages/EditJob";
 import AIHub from "../pages/AIHub";
 import InterviewCoach from "../pages/InterviewCoach";
+import ForgotPassword from "../pages/ForgetPassword";
+import VerifyOTP from "../pages/VerifyOTP";
+import ResetPassword from "../pages/ResetPassword";
+import CodingAssessment from "../pages/CodingAssessment";
+import CareerChat from "../pages/CareerChat";
 
 function AppRoutes() {
   return (
@@ -23,6 +28,20 @@ function AppRoutes() {
       {/* Authentication */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route
+  path="/forgot-password"
+  element={<ForgotPassword />}
+/>
+
+<Route
+  path="/verify-otp"
+  element={<VerifyOTP />}
+/>
+
+<Route
+  path="/reset-password"
+  element={<ResetPassword />}
+/>
 
       {/* Student */}
       <Route path="/dashboard" element={<Dashboard />} />
@@ -60,6 +79,14 @@ function AppRoutes() {
 <Route
   path="/interview-coach"
   element={<InterviewCoach />}
+/>
+<Route
+  path="/coding-assessment"
+  element={<CodingAssessment />}
+/>
+<Route
+  path="/career-chat"
+  element={<CareerChat />}
 />
     </Routes>
   );

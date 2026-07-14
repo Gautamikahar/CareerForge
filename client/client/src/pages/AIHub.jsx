@@ -39,20 +39,29 @@ function AIHub() {
     },
 
     {
-      title: "Interview Questions",
-      icon: "🎤",
-      color: "bg-pink-500",
-      route: "/interview-questions",
-      desc: "AI Generated Questions"
-    },
+  title: "AI Interview Coach",
+  icon: "🎤",
+  color: "bg-pink-500",
+  route: "/interview-coach",
+  desc: "Practice Technical & HR Interviews"
+},
 
     {
-      title: "Career Chatbot",
-      icon: "🤖",
-      color: "bg-indigo-600",
-      route: "/career-chat",
-      desc: "Ask Anything"
-    }
+  title: "Coding Assessment",
+  icon: "💻",
+  color: "bg-red-500",
+  route: "/coding-assessment",
+  desc: "AI Coding Practice"
+},
+
+
+    {
+  title: "AI Career Chatbot",
+  icon: "🤖",
+  color: "bg-indigo-600",
+  route: "/career-chat",
+  desc: "Ask Career Questions"
+},
 
   ];
 
