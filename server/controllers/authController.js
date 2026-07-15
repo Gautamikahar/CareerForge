@@ -2,7 +2,10 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+//const nodemailer = require("nodemailer");
 
 //creates a gmail connection 
 // const transporter = nodemailer.createTransport({
@@ -12,23 +15,23 @@ const nodemailer = require("nodemailer");
 //     pass: process.env.EMAIL_PASS,
 //   },
 // });
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 587,
+//   secure: false,
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
 
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("SMTP ERROR:", error);
-  } else {
-    console.log("SMTP Server Ready");
-  }
-});
+// transporter.verify((error, success) => {
+//   if (error) {
+//     console.log("SMTP ERROR:", error);
+//   } else {
+//     console.log("SMTP Server Ready");
+//   }
+// });
 
 
 // REGISTER USER
@@ -118,11 +121,65 @@ const loginUser = async (req, res) => {
   }
 };
 
+// const forgotPassword = async (req, res) => {
+//   try {
+
+//     const { email } = req.body;
+
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+//      // to generate the OTP 
+//     const otp = Math.floor(
+//       100000 + Math.random() * 900000
+//     ).toString();
+  
+//     //stores the OTP in mongoDb
+//     user.resetOTP = otp;
+//     //stores the expiry time 
+//     user.resetOTPExpire = Date.now() + 10 * 60 * 1000;
+//     //saves both value in db
+//     await user.save();
+
+//     await transporter.sendMail({
+//       from: process.env.EMAIL_USER,
+//       to: email,
+//       subject: "CareerForge Password Reset OTP",
+//       html: `
+//       <h2>CareerForge</h2>
+
+//       <p>Your OTP is:</p>
+
+//       <h1>${otp}</h1>
+
+//       <p>This OTP is valid for 10 minutes.</p>
+//       `,
+//     });
+
+//     res.json({
+//       success: true,
+//       message: "OTP sent successfully",
+//     });
+
+//   } catch (err) {
+
+//     res.status(500).json({
+//       success: false,
+//       message: err.message,
+//     });
+
+//   }
+// };
 const forgotPassword = async (req, res) => {
   try {
-
     const { email } = req.body;
 
+    // Find user
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -131,39 +188,51 @@ const forgotPassword = async (req, res) => {
         message: "User not found",
       });
     }
-     // to generate the OTP 
+
+    // Generate 6-digit OTP
     const otp = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-  
-    //stores the OTP in mongoDb
+
+    // Save OTP in MongoDB
     user.resetOTP = otp;
-    //stores the expiry time 
     user.resetOTPExpire = Date.now() + 10 * 60 * 1000;
-    //saves both value in db
+
     await user.save();
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    // Send email using Resend
+    const { data, error } = await resend.emails.send({
+      from: "CareerForge <onboarding@resend.dev>",
       to: email,
       subject: "CareerForge Password Reset OTP",
       html: `
-      <h2>CareerForge</h2>
+        <h2>CareerForge</h2>
 
-      <p>Your OTP is:</p>
+        <p>Your OTP is:</p>
 
-      <h1>${otp}</h1>
+        <h1>${otp}</h1>
 
-      <p>This OTP is valid for 10 minutes.</p>
+        <p>This OTP is valid for 10 minutes.</p>
       `,
     });
 
-    res.json({
+    if (error) {
+      console.error(error);
+
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send OTP",
+      });
+    }
+
+    res.status(200).json({
       success: true,
       message: "OTP sent successfully",
     });
 
   } catch (err) {
+
+    console.error(err);
 
     res.status(500).json({
       success: false,
@@ -172,6 +241,7 @@ const forgotPassword = async (req, res) => {
 
   }
 };
+//
 
 const verifyOTP = async (req, res) => {
 
