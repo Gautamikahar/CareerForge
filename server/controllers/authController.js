@@ -4,13 +4,31 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
+//creates a gmail connection 
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // use TLS
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("SMTP ERROR:", error);
+  } else {
+    console.log("SMTP Server Ready");
+  }
+});
+
 
 // REGISTER USER
 const registerUser = async (req, res) => {
@@ -112,15 +130,16 @@ const forgotPassword = async (req, res) => {
         message: "User not found",
       });
     }
-
+     // to generate the OTP 
     const otp = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-
+  
+    //stores the OTP in mongoDb
     user.resetOTP = otp;
-
+    //stores the expiry time 
     user.resetOTPExpire = Date.now() + 10 * 60 * 1000;
-
+    //saves both value in db
     await user.save();
 
     await transporter.sendMail({
