@@ -18,6 +18,7 @@ import VerifyOTP from "../pages/VerifyOTP";
 import ResetPassword from "../pages/ResetPassword";
 import CodingAssessment from "../pages/CodingAssessment";
 import CareerChat from "../pages/CareerChat";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 function AppRoutes() {
   return (
@@ -44,15 +45,29 @@ function AppRoutes() {
 />
 
       {/* Student */}
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/edit-profile" element={<EditProfile />} />
+      <Route path="/dashboard" element={<ProtectedRoute> <Dashboard/> </ProtectedRoute>} />
+      <Route
+  path="/edit-profile"
+  element={
+    <ProtectedRoute>
+      <EditProfile />
+    </ProtectedRoute>
+  }
+/>
       <Route
         path="/resume-analyzer"
         element={<ResumeAnalyzer />}
       />
 
       {/* Jobs */}
-      <Route path="/jobs" element={<Jobs />} />
+      <Route
+  path="/jobs"
+  element={
+    <ProtectedRoute>
+      <Jobs />
+    </ProtectedRoute>
+  }
+/>
 
       {/* Recruiter */}
       <Route
@@ -74,7 +89,11 @@ function AppRoutes() {
 />
 <Route
   path="/ai"
-  element={<AIHub />}
+  element={
+    <ProtectedRoute>
+      <AIHub />
+    </ProtectedRoute>
+  }
 />
 <Route
   path="/interview-coach"

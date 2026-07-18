@@ -317,7 +317,7 @@ const deleteResume = async () => {
       <div className="flex flex-wrap gap-4">
 
         <a
-          href={`http://localhost:5000/${data.resume.filePath}`}
+          href={`${import.meta.env.VITE_API_URL}/${data.resume.filePath}`}
           target="_blank"
           rel="noreferrer"
           className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg"

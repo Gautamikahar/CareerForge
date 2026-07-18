@@ -18,3 +18,4 @@ ReactDOM.createRoot(
     </BrowserRouter>
   </React.StrictMode>
 );
+//this file is the entry point of react without it it won't be able to start

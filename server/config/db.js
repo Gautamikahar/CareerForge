@@ -1,3 +1,4 @@
+//it is used for connecting mongoDB  using mongoose
 const mongoose = require("mongoose");
 
 const connectDB = async () => {

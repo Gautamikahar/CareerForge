@@ -4,52 +4,52 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
 
+  // Restore user from localStorage
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  const [token, setToken] = useState(
-    localStorage.getItem("token")
-  );
+  // Restore token from localStorage
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("token");
+  });
 
+  // Keep localStorage updated whenever user changes
   useEffect(() => {
 
     if (user) {
-
-      localStorage.setItem(
-        "user",
-        JSON.stringify(user)
-      );
-
+      localStorage.setItem("user", JSON.stringify(user));
     } else {
-
       localStorage.removeItem("user");
-
     }
 
   }, [user]);
 
+  // Keep localStorage updated whenever token changes
+  useEffect(() => {
+
+    if (token) {
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("token");
+    }
+
+  }, [token]);
+
+  // Login
   const login = (userData, jwt) => {
 
     setUser(userData);
     setToken(jwt);
 
-    localStorage.setItem("token", jwt);
-    localStorage.setItem(
-      "user",
-      JSON.stringify(userData)
-    );
-
   };
 
+  // Logout
   const logout = () => {
 
     setUser(null);
     setToken(null);
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
 
   };
 
@@ -63,9 +63,7 @@ export const AuthProvider = ({ children }) => {
         logout,
       }}
     >
-
       {children}
-
     </AuthContext.Provider>
 
   );
