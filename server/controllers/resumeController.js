@@ -1,4 +1,5 @@
 const Resume = require("../models/Resume");
+const path = require("path");
 const fs = require("fs");
 
 // ==========================
@@ -14,15 +15,18 @@ exports.uploadResume = async (req, res) => {
     // If resume already exists, delete old PDF
     if (resume) {
 
-      if (
-        resume.filePath &&
-        fs.existsSync(resume.filePath)
-      ) {
-        fs.unlinkSync(resume.filePath);
-      }
+      const oldFile = path.join(
+  __dirname,
+  "..",
+  resume.filePath
+);
+
+if (fs.existsSync(oldFile)) {
+  fs.unlinkSync(oldFile);
+}
 
       resume.fileName = req.file.filename;
-      resume.filePath = req.file.path;
+      resume.filePath =  `/uploads/resumes/${req.file.filename}`
 
       await resume.save();
 
@@ -39,7 +43,7 @@ exports.uploadResume = async (req, res) => {
     resume = await Resume.create({
       user: req.user.id,
       fileName: req.file.filename,
-      filePath: req.file.path
+      filePath:  `/uploads/resumes/${req.file.filename}`
     });
 
     res.status(201).json({
@@ -112,13 +116,15 @@ exports.deleteResume = async (req, res) => {
 
     }
 
-    if (
-      resume.filePath &&
-      fs.existsSync(resume.filePath)
-    ) {
-      fs.unlinkSync(resume.filePath);
-    }
+    const fileLocation = path.join(
+  __dirname,
+  "..",
+  resume.filePath
+);
 
+if (fs.existsSync(fileLocation)) {
+  fs.unlinkSync(fileLocation);
+}
     await Resume.findByIdAndDelete(
       resume._id
     );

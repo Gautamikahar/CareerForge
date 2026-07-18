@@ -1,6 +1,7 @@
 import { useEffect, useRef , useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import API from "../api/axios";
+
 // import CareerChatbot from "../components/CareerChatbot";
 function Dashboard() {
   const [data, setData] = useState(null);
@@ -317,8 +318,7 @@ const deleteResume = async () => {
       <div className="flex flex-wrap gap-4">
 
         <a
-          href={`${import.meta.env.VITE_API_URL}/${data.resume.filePath}`}
-          target="_blank"
+          href={`${import.meta.env.VITE_BACKEND_URL}${data.resume.filePath}`}
           rel="noreferrer"
           className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg"
         >
