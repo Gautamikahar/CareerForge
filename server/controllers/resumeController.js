@@ -119,8 +119,9 @@ exports.deleteResume = async (req, res) => {
     const fileLocation = path.join(
   __dirname,
   "..",
-  resume.filePath
+  resume.filePath.replace(/^\//, "")
 );
+
 
 if (fs.existsSync(fileLocation)) {
   fs.unlinkSync(fileLocation);
