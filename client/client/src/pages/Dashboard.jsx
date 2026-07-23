@@ -107,7 +107,7 @@ const deleteResume = async () => {
       </div>
     );
   }
-
+console.log(data.resume);
   return (
     <div className="bg-gray-100 min-h-screen py-10">
 
@@ -318,11 +318,12 @@ const deleteResume = async () => {
       <div className="flex flex-wrap gap-4">
 
         <a
-          href={`${import.meta.env.VITE_BACKEND_URL}${data.resume.filePath}`}
-          rel="noreferrer"
+          href={data.resume.fileUrl}
+target="_blank"
+rel="noreferrer"
           className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg"
         >
-          👁 View Resume
+          Download Resume 
         </a>
 
         <button
@@ -331,14 +332,14 @@ const deleteResume = async () => {
           }
           className="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-3 rounded-lg"
         >
-          🔄 Replace Resume
+          Replace Resume
         </button>
 
         <button
           onClick={deleteResume}
           className="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-lg"
         >
-          🗑 Delete Resume
+          Delete Resume
         </button>
 
       </div>

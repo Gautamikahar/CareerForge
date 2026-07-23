@@ -1,46 +1,13 @@
-// const multer = require("multer");
-// const path = require("path");
-
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "uploads/resumes");
-//   },
-
-//   filename: (req, file, cb) => {
-//     cb(
-//       null,
-//       Date.now() +
-//       path.extname(file.originalname)
-//     );
-//   }
-// });
-
-// const upload = multer({
-//   storage
-// });
-
-// module.exports = upload;
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
 
-// Create uploads/resumes folder if it doesn't exist
-const uploadDir = path.join(__dirname, "../uploads/resumes");
-
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      Date.now() + path.extname(file.originalname)
-    );
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "careerforge/resumes",
+    resource_type: "raw",
+    allowed_formats: ["pdf"],
   },
 });
 

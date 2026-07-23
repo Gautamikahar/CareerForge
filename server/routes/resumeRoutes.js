@@ -15,7 +15,9 @@ const { protect } = require(
 const upload = require(
   "../middleware/uploadMiddleware"
 );
-
+router.get("/test", (req, res) => {
+  res.send("Resume route is working");
+});
 router.post(
   "/upload",
   protect,
@@ -31,6 +33,10 @@ router.get(
 
 router.delete(
   "/delete",
+  (req, res, next) => {
+    //console.log("DELETE ROUTE HIT");
+    next();
+  },
   protect,
   deleteResume
 );

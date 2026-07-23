@@ -9,14 +9,19 @@ const resumeSchema = new mongoose.Schema(
     },
 
     fileName: {
-      type: String,
-      required: true
-    },
+  type: String,
+  required: true,
+},
 
-    filePath: {
-      type: String,
-      required: true
-    }
+fileUrl: {
+  type: String,
+  required: true,
+},
+
+publicId: {
+  type: String,
+  required: true,
+},
   },
   {
     timestamps: true

@@ -1,6 +1,7 @@
 const Resume = require("../models/Resume");
-const path = require("path");
-const fs = require("fs");
+const cloudinary = require("../config/cloudinary");
+
+//console.log("✅ NEW CLOUDINARY RESUME CONTROLLER LOADED");
 
 // ==========================
 // Upload / Replace Resume
@@ -8,55 +9,69 @@ const fs = require("fs");
 exports.uploadResume = async (req, res) => {
   try {
 
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Please upload a PDF resume",
+      });
+    }
+
     let resume = await Resume.findOne({
-      user: req.user.id
+      user: req.user.id,
     });
 
-    // If resume already exists, delete old PDF
+    // -------------------------
+    // Replace Existing Resume
+    // -------------------------
     if (resume) {
 
-      const oldFile = path.join(
-  __dirname,
-  "..",
-  resume.filePath
-);
+      // Delete old resume from Cloudinary
+      if (resume.publicId) {
+        await cloudinary.uploader.destroy(
+          resume.publicId,
+          {
+            resource_type: "raw",
+          }
+        );
+      }
 
-if (fs.existsSync(oldFile)) {
-  fs.unlinkSync(oldFile);
-}
-
-      resume.fileName = req.file.filename;
-      resume.filePath =  `/uploads/resumes/${req.file.filename}`
+      // Save new resume details
+      resume.fileName = req.file.originalname;
+      resume.fileUrl = req.file.path;
+      resume.publicId = req.file.filename;
 
       await resume.save();
 
       return res.status(200).json({
         success: true,
         message: "Resume updated successfully",
-        resume
+        resume,
       });
-
     }
 
-    // Upload first resume
-
+    // -------------------------
+    // Upload New Resume
+    // -------------------------
     resume = await Resume.create({
       user: req.user.id,
-      fileName: req.file.filename,
-      filePath:  `/uploads/resumes/${req.file.filename}`
+      fileName: req.file.originalname,
+      fileUrl: req.file.path,
+      publicId: req.file.filename,
     });
 
     res.status(201).json({
       success: true,
       message: "Resume uploaded successfully",
-      resume
+      resume,
     });
 
   } catch (error) {
 
+    console.log(error);
+
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
 
   }
@@ -70,26 +85,28 @@ exports.getMyResume = async (req, res) => {
   try {
 
     const resume = await Resume.findOne({
-      user: req.user.id
+      user: req.user.id,
     });
 
     if (!resume) {
       return res.status(404).json({
         success: false,
-        message: "Resume not found"
+        message: "Resume not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      resume
+      resume,
     });
 
   } catch (error) {
 
+    console.log(error);
+
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
 
   }
@@ -99,49 +116,95 @@ exports.getMyResume = async (req, res) => {
 // ==========================
 // Delete Resume
 // ==========================
-exports.deleteResume = async (req, res) => {
+// exports.deleteResume = async (req, res) => {
 
+//   try {
+
+//     const resume = await Resume.findOne({
+//       user: req.user.id,
+//     });
+
+//     if (!resume) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Resume not found",
+//       });
+//     }
+
+//     // Delete from Cloudinary
+//     if (resume.publicId) {
+//       await cloudinary.uploader.destroy(
+//         resume.publicId,
+//         {
+//           resource_type: "raw",
+//         }
+//       );
+//     }
+
+//     // Delete from MongoDB
+//     await Resume.findByIdAndDelete(resume._id);
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Resume deleted successfully",
+//     });
+
+//   } catch (error) {
+
+//     console.log(error);
+
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+
+//   }
+
+// };
+exports.deleteResume = async (req, res) => {
   try {
+    //console.log("Inside delete controller");
 
     const resume = await Resume.findOne({
-      user: req.user.id
+      user: req.user.id,
     });
+
+    console.log("Resume Found:", resume);
 
     if (!resume) {
-
       return res.status(404).json({
         success: false,
-        message: "Resume not found"
+        message: "Resume not found",
       });
-
     }
 
-    const fileLocation = path.join(
-  __dirname,
-  "..",
-  resume.filePath.replace(/^\//, "")
-);
+    //console.log("Deleting from Cloudinary...");
 
-
-if (fs.existsSync(fileLocation)) {
-  fs.unlinkSync(fileLocation);
-}
-    await Resume.findByIdAndDelete(
-      resume._id
+    await cloudinary.uploader.destroy(
+      resume.publicId,
+      {
+        resource_type: "raw",
+      }
     );
 
-    res.status(200).json({
+    //console.log("Deleting from MongoDB...");
+
+    await Resume.findByIdAndDelete(resume._id);
+
+    //console.log("Deleted Successfully");
+
+    res.json({
       success: true,
-      message: "Resume deleted successfully"
+      message: "Resume deleted",
     });
 
-  } catch (error) {
+  } catch (err) {
+    console.log("DELETE ERROR:");
+    console.log(err);
 
     res.status(500).json({
       success: false,
-      message: error.message
+      message: err.message,
     });
-
   }
-
 };
